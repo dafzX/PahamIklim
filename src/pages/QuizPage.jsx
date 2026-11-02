@@ -1,23 +1,33 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, Check, RotateCcw, X } from 'lucide-react'
 import { quizQuestions } from '../data/content.js'
+import { useScrollAnimations } from '../lib/useScrollAnimations.js'
 
 const PROGRESS_KEY = 'pahamiklim-quiz-best'
 
+function readBestScore() {
+  if (typeof window === 'undefined' || !window.localStorage) return 0
+  const storedValue = Number.parseInt(window.localStorage.getItem(PROGRESS_KEY) || '0', 10)
+  return Number.isFinite(storedValue) && storedValue >= 0 ? storedValue : 0
+}
+
 export default function QuizPage() {
+  const rootRef = useRef(null)
   const [started, setStarted] = useState(false)
   const [answers, setAnswers] = useState({})
   const [current, setCurrent] = useState(0)
-  const [best, setBest] = useState(() => Number(localStorage.getItem(PROGRESS_KEY) || 0))
+  const [best, setBest] = useState(readBestScore)
   const completed = Object.keys(answers).length === quizQuestions.length
   const finished = started && completed
   const score = quizQuestions.reduce((total, question, index) => total + (answers[index] === question.answer ? 1 : 0), 0)
+  useScrollAnimations(rootRef)
 
   useEffect(() => {
-    if (finished && score > best) {
-      localStorage.setItem(PROGRESS_KEY, String(score))
-      setBest(score)
+    if (!finished || score <= best) return
+    if (typeof window !== 'undefined' && window.localStorage) {
+      window.localStorage.setItem(PROGRESS_KEY, String(score))
     }
+    setBest(score)
   }, [finished, score, best])
 
   const startOver = () => {
@@ -27,7 +37,7 @@ export default function QuizPage() {
   }
 
   return (
-    <div className="inner-page">
+    <div ref={rootRef} className="inner-page">
       <section className="page-hero quiz-hero">
         <span className="eyebrow">KUIS · {quizQuestions.length} PERTANYAAN</span>
         <h1>Belajar lebih dalam,<br /><em>satu pertanyaan setiap kali.</em></h1>

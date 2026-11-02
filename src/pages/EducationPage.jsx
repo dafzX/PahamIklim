@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowRight, Flame, Globe2, Leaf, Wind } from 'lucide-react'
 import EarthScene from '../three/EarthExperience.jsx'
 import EnvironmentExperience from '../three/EnvironmentExperience.jsx'
+import { useScrollAnimations } from '../lib/useScrollAnimations.js'
 
 const topics = [
   { id: '01', title: 'Apa itu perubahan iklim?', text: 'Perubahan jangka panjang pada suhu dan pola cuaca. Variasi alami selalu ada, tetapi pemanasan sejak abad ke-20 terutama disebabkan aktivitas manusia.', icon: <Globe2 /> },
@@ -18,24 +19,26 @@ const environments = [
 ]
 
 export default function EducationPage() {
+  const rootRef = useRef(null)
   const [activeScene, setActiveScene] = useState('factory')
   const scene = environments.find((item) => item.id === activeScene)
+  useScrollAnimations(rootRef)
   return (
-    <div className="inner-page">
+    <div ref={rootRef} className="inner-page">
       <section className="page-hero education-hero">
         <span className="eyebrow">PANDUAN SINGKAT · 4 BAB</span>
         <h1>Memahami iklim<br /><em>adalah memahami rumah kita.</em></h1>
         <p>Mulai dari dasar, ikuti hubungan sebab-akibat, lalu lihat pilihan yang tersedia untuk masa depan.</p>
       </section>
       <section className="education-globe-band">
-        <div><span className="eyebrow">BUMI SEBAGAI SISTEM</span><h2>Tak ada perubahan<br />yang berdiri sendiri.</h2><p>Ketuk titik pada globe untuk melihat beberapa cerita wilayah. Lokasi bersifat ilustratif dan merujuk pada sumber ilmiah.</p></div>
-        <EarthScene />
+        <div><span className="eyebrow">BUMI SEBAGAI SISTEM</span><h2>Tak ada perubahan<br />yang berdiri sendiri.</h2><p>Pilih marker atau nama lokasi untuk mengarahkan globe ke wilayah tersebut dan membaca ringkasan beserta sumber ilmiahnya.</p></div>
+        <EarthScene showHotspotList />
       </section>
       <section className="environment-section section-pad">
         <div className="environment-copy">
-          <span className="eyebrow">VISUAL LAB · ADEGAN PROSEDURAL 3D</span>
+          <span className="eyebrow">VISUAL LAB · DIORAMA EDUKATIF 3D</span>
           <h2>Kenali sistem<br /><em>di balik perubahan.</em></h2>
-          <p>Pilih adegan untuk melihat model 3D sederhana yang dibuat dari geometri. Seret untuk memutar kamera; setiap visual adalah ilustrasi edukasi, bukan representasi data langsung.</p>
+          <p>Pilih diorama 3D yang merangkum sistem industri, kota, energi bersih, dan alam. Seret untuk memutar kamera; setiap visual adalah ilustrasi edukasi, bukan representasi data langsung.</p>
           <div className="environment-tabs" role="group" aria-label="Pilih adegan 3D">
             {environments.map((item) => <button type="button" aria-pressed={activeScene === item.id} className={activeScene === item.id ? 'selected' : ''} key={item.id} onClick={() => setActiveScene(item.id)}>{item.label}</button>)}
           </div>

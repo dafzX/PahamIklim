@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { ArrowLeft, ArrowRight, RotateCcw, Wind } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { emissionFactors } from '../data/content.js'
 import { calculateEmissions } from '../lib/calculator.js'
+import { useScrollAnimations } from '../lib/useScrollAnimations.js'
 
 function EmissionBreakdown({ result }) {
   const colors = ['#C5F36A', '#4D9A67', '#6DB9AD']
@@ -17,6 +18,7 @@ function EmissionBreakdown({ result }) {
 }
 
 export default function CalculatorPage() {
+  const rootRef = useRef(null)
   const [values, setValues] = useState({ distance: '', electricity: '', acHours: '' })
   const [result, setResult] = useState(null)
   const [error, setError] = useState('')
@@ -38,8 +40,10 @@ export default function CalculatorPage() {
     setResult(null)
   }
 
+  useScrollAnimations(rootRef)
+
   return (
-    <div className="inner-page">
+    <div ref={rootRef} className="inner-page">
       <section className="page-hero calculator-hero">
         <span className="eyebrow">ALAT EDUKASI · ESTIMASI SKENARIO</span>
         <h1>Kenali jejak.<br /><em>Temukan ruang untuk berubah.</em></h1>

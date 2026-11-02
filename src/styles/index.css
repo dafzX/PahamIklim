@@ -56,15 +56,22 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #77a8
 .hero-globe-wrap .earth-fallback{min-height:0}
 .earth-scene canvas{width:100%!important;height:100%!important;display:block}
 .earth-hint{position:absolute;left:8%;bottom:7%;font-size:8px;letter-spacing:1.4px;color:#92ab9c;display:flex;align-items:center;gap:10px;pointer-events:none}
-.hotspot-panel{position:absolute;right:3%;bottom:13%;z-index:4;width:min(300px,80%);padding:20px;background:#f8faf8;color:#17211b;box-shadow:0 15px 50px #0005}
+.hotspot-panel{position:absolute;right:3%;bottom:13%;z-index:4;width:min(300px,80%);padding:20px;background:#f8faf8;color:#17211b;box-shadow:0 15px 50px #0005;animation:hotspot-arrive .35s ease-out both}
 .hotspot-panel .eyebrow{display:block;color:#65816c;font-size:8px}
+.hotspot-category{display:block;margin-top:8px;color:#829184;font-size:9px;letter-spacing:.04em}
 .hotspot-panel strong{display:block;font:700 17px var(--display);margin:9px 24px 7px 0}
 .hotspot-panel p{font-size:12px;line-height:1.6;color:#65736a;margin:0 0 12px}
 .hotspot-panel a{font-size:10px;color:#21834a;font-weight:700}
 .hotspot-close{position:absolute;right:12px;top:8px;border:0;background:none;font-size:24px;color:#65736a}
-.hotspot-trigger{width:26px;height:26px;padding:0;border:0;border-radius:50%;background:rgba(197,243,106,.16);display:grid;place-items:center;cursor:pointer}
-.hotspot-trigger span{display:block;width:8px;height:8px;border-radius:50%;background:#d5ff75;box-shadow:0 0 12px 4px rgba(197,243,106,.65)}
-.hotspot-trigger:hover{transform:scale(1.2)}
+.hotspot-list button{border:1px solid rgba(197,243,106,.28);background:rgba(8,28,21,.78);color:#e4eee5;border-radius:999px;padding:7px 10px;font:600 8px "DM Sans",sans-serif;letter-spacing:.02em;cursor:pointer}
+.hotspot-list button:hover,.hotspot-list button:focus-visible{border-color:#c5f36a;color:#c5f36a}
+.hotspot-list{position:absolute;left:8%;right:8%;bottom:12%;z-index:3;display:flex;justify-content:center;flex-wrap:wrap;gap:6px}
+.hotspot-list button{padding:7px 9px}
+.hotspot-close{cursor:pointer}
+.hotspot-close:focus-visible{outline:2px solid #21834a;outline-offset:2px}
+.hotspot-panel[aria-live]{transition:opacity .3s ease,transform .3s ease}
+@keyframes hotspot-arrive{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+.education-globe-band .hotspot-panel{bottom:16%}
 .orbit-label{position:absolute;top:8%;right:10%;font-size:8px;color:#859b8b;letter-spacing:1.5px;display:flex;gap:30px}
 .orbit-label span{color:#c5f36a}
 .globe-caption{position:absolute;right:3%;bottom:9%;display:flex;align-items:center;gap:13px;color:#b6c5bd;font-size:10px;line-height:1.55}
@@ -256,7 +263,7 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #77a8
 .environment-tabs button{padding:9px 11px;border:1px solid #d6e1d4;background:transparent;color:#69796d;font-size:9px}
 .environment-tabs button.selected{background:#123d2b;border-color:#123d2b;color:#f4f8ef}
 .environment-index{display:block;margin-top:20px;font:500 9px var(--display);letter-spacing:1.2px;color:#849489}
-.environment-visual{position:relative;min-height:420px;background:#0a1d17;overflow:hidden}
+.environment-visual{position:relative;min-height:420px;background:#0a1d17;overflow:hidden;border:1px solid rgba(220,230,220,.72);box-shadow:0 20px 50px rgba(18,61,43,.12)}
 .environment-canvas{height:420px;width:100%}
 .environment-loading{display:grid;place-items:center;color:#b4c5b6;font-size:11px}
 .environment-static{height:420px;position:relative;overflow:hidden;background:linear-gradient(160deg,#17382d,#0a1d17);display:flex;align-items:center;justify-content:center}
@@ -514,7 +521,10 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #77a8
  .page-hero h1{font-size:clamp(40px,9vw,60px);letter-spacing:-2.5px}
  .education-globe-band{grid-template-columns:1fr;padding:42px 8% 25px}
  .education-globe-band h2{font-size:31px}
- .education-globe-band>.earth-scene{height:300px;min-height:290px}
+ .education-globe-band>.earth-scene{height:auto;min-height:0;display:flex;flex-direction:column}
+ .education-globe-band>.earth-scene>canvas{height:300px!important;flex:0 0 300px}
+ .education-globe-band .hotspot-panel{position:relative;right:auto;bottom:auto;width:min(100%,400px);margin:0 auto 10px}
+ .education-globe-band .earth-hint{top:278px;bottom:auto}
  .environment-section{grid-template-columns:1fr;gap:25px}
  .environment-visual,.environment-canvas{min-height:350px;height:350px}
  .environment-static{height:350px}
@@ -553,6 +563,9 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #77a8
  .article-body h2{font-size:21px}
 }
 @media(max-width:420px){
+ .hotspot-list button{padding:6px 8px;font-size:7px}
+ .hotspot-list{left:3%;right:3%;bottom:11%;gap:4px}
+ .hotspot-panel{right:2%;bottom:13%;width:min(270px,86%);padding:16px}
  .hero-actions{align-items:stretch;flex-direction:column;max-width:280px}
  .button{padding:13px 15px}
  .hero-globe-wrap{height:320px}
@@ -568,6 +581,9 @@ a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #77a8
  .quiz-controls{gap:10px}
  .quiz-controls .button{gap:6px;padding:9px 10px}
  .article-detail-header h1{font-size:34px}
+}
+@media(prefers-reduced-motion:reduce){
+ .hotspot-panel{animation-duration:.01ms}
 }
 @media(prefers-reduced-motion:reduce){
  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}

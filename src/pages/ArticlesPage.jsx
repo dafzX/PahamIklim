@@ -1,7 +1,8 @@
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ArrowLeft, ArrowRight, Search } from 'lucide-react'
 import { articles } from '../data/content.js'
+import { useScrollAnimations } from '../lib/useScrollAnimations.js'
 
 const categories = ['Semua', ...new Set(articles.map((article) => article.category))]
 
@@ -10,12 +11,14 @@ function ArticleArtwork({ article, index = 0, large = false }) {
 }
 
 export default function ArticlesPage() {
+  const rootRef = useRef(null)
   const [category, setCategory] = useState('Semua')
   const [search, setSearch] = useState('')
   const visible = useMemo(() => articles.filter((article) => (category === 'Semua' || article.category === category) && `${article.title} ${article.excerpt} ${article.category}`.toLowerCase().includes(search.toLowerCase())), [category, search])
+  useScrollAnimations(rootRef)
 
   return (
-    <div className="inner-page">
+    <div ref={rootRef} className="inner-page">
       <section className="page-hero articles-hero">
         <span className="eyebrow">CATATAN DARI BUMI · {articles.length} CERITA PILIHAN</span>
         <h1>Rasa ingin tahu<br /><em>adalah awal perjalanan.</em></h1>
@@ -34,13 +37,15 @@ export default function ArticlesPage() {
 }
 
 export function ArticleDetailPage() {
+  const rootRef = useRef(null)
   const { id } = useParams()
   const article = articles.find((item) => item.id === id)
-  if (!article) return <div className="not-found"><span className="eyebrow">CERITA TIDAK DITEMUKAN</span><h1>Halaman ini belum tersedia.</h1><Link to="/artikel" className="text-link"><ArrowLeft size={16} /> Kembali ke artikel</Link></div>
+  useScrollAnimations(rootRef)
+  if (!article) return <div ref={rootRef} className="not-found"><span className="eyebrow">CERITA TIDAK DITEMUKAN</span><h1>Halaman ini belum tersedia.</h1><Link to="/artikel" className="text-link"><ArrowLeft size={16} /> Kembali ke artikel</Link></div>
   const related = articles.filter((item) => item.id !== article.id).slice(0, 2)
 
   return (
-    <article className="article-detail inner-page">
+    <article ref={rootRef} className="article-detail inner-page">
       <div className="article-detail-nav"><Link to="/artikel" className="text-link"><ArrowLeft size={16} /> Semua artikel</Link><span>{article.category} · {article.readTime}</span></div>
       <header className="article-detail-header"><span className="eyebrow">CATATAN DARI BUMI</span><h1>{article.title}</h1><p>{article.excerpt}</p></header>
       <ArticleArtwork article={article} large />

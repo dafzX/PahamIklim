@@ -18,6 +18,10 @@ class EnvironmentErrorBoundary extends React.Component {
     return { failed: true }
   }
 
+  componentDidCatch(error) {
+    console.error('Environment scene failed to render.', error)
+  }
+
   render() {
     return this.state.failed ? this.props.fallback : this.props.children
   }

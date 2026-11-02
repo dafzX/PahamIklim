@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowDown, ArrowRight, ArrowUpRight, ChevronDown, CloudSun, Droplets, Leaf, Wind, Zap } from 'lucide-react'
 import { motion, useReducedMotion } from 'motion/react'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import EarthScene from '../three/EarthExperience.jsx'
 import { articles } from '../data/content.js'
+import { useScrollAnimations } from '../lib/useScrollAnimations.js'
 
 const causes = [
   { icon: <Zap />, number: '01', title: 'Energi yang kita gunakan', text: 'Listrik dan panas yang dihasilkan dari bahan bakar fosil menjadi sumber utama emisi gas rumah kaca.' },
@@ -25,27 +24,7 @@ export default function HomePage() {
   const rootRef = useRef(null)
   const reducedMotion = useReducedMotion()
   const [activeImpact, setActiveImpact] = useState(0)
-
-  useEffect(() => {
-    if (reducedMotion || !rootRef.current) return undefined
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray('.reveal').forEach((element) => {
-        gsap.fromTo(element, { y: 28, opacity: 0 }, {
-          y: 0, opacity: 1, duration: 0.8, ease: 'power2.out',
-          scrollTrigger: { trigger: element, start: 'top 88%', once: true },
-        })
-      })
-      gsap.utils.toArray('.reveal-stagger').forEach((element) => {
-        const children = [...element.children].filter((child) => !child.matches('.cta-orb, .cta-index'))
-        if (!children.length) return
-        gsap.fromTo(children, { y: 20, opacity: 0 }, {
-          y: 0, opacity: 1, duration: 0.65, stagger: 0.12, ease: 'power2.out',
-          scrollTrigger: { trigger: element, start: 'top 88%', once: true },
-        })
-      })
-    }, rootRef)
-    return () => ctx.revert()
-  }, [reducedMotion])
+  useScrollAnimations(rootRef)
 
   return (
     <div ref={rootRef}>
@@ -82,7 +61,7 @@ export default function HomePage() {
       </section>
 
       <section id="cerita" className="intro-section section-pad">
-        <div className="intro-art reveal"><div className="sun-disc" /><span className="art-caption">01 — SISTEM YANG SALING TERHUBUNG</span><div className="art-line" /><div className="art-coordinate">6°12′S<br />106°49′E</div></div>
+        <div className="intro-art reveal-scale"><div className="sun-disc" /><span className="art-caption">01 — SISTEM YANG SALING TERHUBUNG</span><div className="art-line" /><div className="art-coordinate">6°12′S<br />106°49′E</div></div>
         <div className="intro-copy reveal"><span className="eyebrow">LEBIH DARI SEKADAR CUACA</span><h2>Bumi sedang<br /><em>bercerita.</em></h2><p>Perubahan iklim adalah perubahan jangka panjang pada pola suhu dan cuaca. Bumi selalu memiliki variasi alami, tetapi pemanasan yang kita amati sekarang terutama didorong oleh aktivitas manusia.</p><p className="small-note">Memahami perbedaan antara cuaca hari ini dan iklim jangka panjang adalah awal dari percakapan yang lebih baik.</p><Link className="text-link" to="/belajar">Mulai dari dasar <ArrowRight size={16} /></Link></div>
       </section>
 
@@ -105,7 +84,7 @@ export default function HomePage() {
           <p className="impact-detail">{impacts[activeImpact].text}</p>
           <a href="https://www.ipcc.ch/report/ar6/wg2/" target="_blank" rel="noreferrer" className="text-link text-light">Jelajahi dampak iklim <ArrowRight size={16} /></a>
         </div>
-        <div className={`impact-visual impact-visual-${activeImpact} reveal`}><div className="heat-ring ring-one" /><div className="heat-ring ring-two" /><div className="impact-sun" /><div className="impact-land" /><div className="impact-figure">IKLIM BERUBAH<br /><span>RISIKO BERBEDA DI SETIAP TEMPAT</span></div></div>
+        <div className={`impact-visual impact-visual-${activeImpact} reveal-scale`}><div className="heat-ring ring-one" /><div className="heat-ring ring-two" /><div className="impact-sun" /><div className="impact-land" /><div className="impact-figure">IKLIM BERUBAH<br /><span>RISIKO BERBEDA DI SETIAP TEMPAT</span></div></div>
       </section>
 
       <section className="explore-section section-pad">
@@ -116,7 +95,7 @@ export default function HomePage() {
       <section className="solutions-section section-pad">
         <div className="solution-heading reveal"><span className="eyebrow">04 — MASA DEPAN BISA DIARAHKAN</span><h2>Harapan bukan<br />sekadar perasaan.<br /><em>Ia adalah tindakan.</em></h2></div>
         <div className="solution-body reveal"><p>Solusi iklim sudah ada: energi bersih, efisiensi, perlindungan alam, transportasi yang lebih baik, dan kebijakan yang berpihak pada masa depan.</p><div className="solution-grid"><div><span>01</span><strong>Kurangi emisi</strong><p>Gunakan energi dan sumber daya dengan lebih bijak.</p></div><div><span>02</span><strong>Pulihkan alam</strong><p>Jaga ekosistem yang menopang kehidupan.</p></div><div><span>03</span><strong>Bergerak bersama</strong><p>Dukung solusi yang adil dan berdampak luas.</p></div></div><a href="https://www.ipcc.ch/report/ar6/wg3/" target="_blank" rel="noreferrer" className="text-link">Kenali opsi mitigasi <ArrowRight size={16} /></a></div>
-        <div className="solution-art reveal"><div className="windmill"><i /><i /><i /><b /></div><div className="green-hill hill-a" /><div className="green-hill hill-b" /><span>MEMBANGUN MASA DEPAN YANG LEBIH TANGGUH</span></div>
+        <div className="solution-art reveal-scale"><div className="windmill"><i /><i /><i /><b /></div><div className="green-hill hill-a" /><div className="green-hill hill-b" /><span>MEMBANGUN MASA DEPAN YANG LEBIH TANGGUH</span></div>
       </section>
 
       <section className="tools-section section-pad">
